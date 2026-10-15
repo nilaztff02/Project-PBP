@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 
+import '../models/product.dart';
+import '../models/booking.dart';
 import '../data/product_data.dart';
 import '../widgets/flower_decoration.dart';
 import '../widgets/store_info_row.dart';
 import 'product_page.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
+  final List<Booking> bookingHistory;
+  final ValueChanged<Booking> onBookingAdded;
+
+  HomePage({
+    super.key,
+    required this.bookingHistory,
+    required this.onBookingAdded,
+  });
 
   final List<Map<String, dynamic>> categories = [
     {
@@ -51,7 +60,6 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // HEADER
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -86,9 +94,7 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 24),
-
             const Text(
               'Pilihan Buket 🌷',
               style: TextStyle(
@@ -96,10 +102,7 @@ class HomePage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 14),
-
-            // DAFTAR KATEGORI
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -107,8 +110,8 @@ class HomePage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final category = categories[index];
 
-                final products =
-                    category['products'] as List<Product>;
+                final List<Product> products =
+                    List<Product>.from(category['products']);
 
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
@@ -144,6 +147,8 @@ class HomePage extends StatelessWidget {
                           builder: (context) => ProductPage(
                             category: category['title'] as String,
                             products: products,
+                            bookingHistory: bookingHistory,
+                            onBookingAdded: onBookingAdded,
                           ),
                         ),
                       );
@@ -152,10 +157,7 @@ class HomePage extends StatelessWidget {
                 );
               },
             ),
-
             const SizedBox(height: 20),
-
-            // INFORMASI TOKO
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -181,38 +183,31 @@ class HomePage extends StatelessWidget {
                       color: Colors.pink,
                     ),
                   ),
-
                   const SizedBox(height: 12),
-
                   const StoreInfoRow(
                     icon: Icons.location_on,
                     title: 'Alamat',
                     value: 'Panekan, Magetan, Jawa Timur 63353',
                   ),
-
                   const StoreInfoRow(
                     icon: Icons.phone,
                     title: 'Nomor Telepon',
                     value: '+62 813-5754-662',
                   ),
-
                   const StoreInfoRow(
                     icon: Icons.camera_alt,
                     title: 'Instagram',
                     value: '@bucketmurah.magetan',
                   ),
-
                   const StoreInfoRow(
                     icon: Icons.music_note,
                     title: 'TikTok',
                     value: '@bucketmurah.magetan',
                   ),
-
                   const StoreInfoRow(
                     icon: Icons.access_time,
                     title: 'Jam Buka',
-                    value:
-                        'Senin–Sabtu: 07.30–20.00\nMinggu: Tutup',
+                    value: 'Senin–Sabtu: 07.30–20.00\nMinggu: Tutup',
                   ),
                 ],
               ),

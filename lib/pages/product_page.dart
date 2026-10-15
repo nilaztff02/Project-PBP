@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../models/product.dart';
+import '../models/booking.dart';
 import '../widgets/product_card.dart';
 
 class ProductPage extends StatelessWidget {
   final String category;
   final List<Product> products;
+  final List<Booking> bookingHistory;
+  final ValueChanged<Booking> onBookingAdded;
 
   const ProductPage({
     super.key,
     required this.category,
     required this.products,
+    required this.bookingHistory,
+    required this.onBookingAdded,
   });
 
   @override
@@ -28,18 +33,41 @@ class ProductPage extends StatelessWidget {
               child: Text('Belum ada produk buket.'),
             )
           : GridView.builder(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               gridDelegate:
                   const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+                crossAxisCount: 4,
                 crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                childAspectRatio: 0.58,
+                mainAxisSpacing: 10,
+
+                // Kartu cukup tinggi untuk foto dan informasi.
+                childAspectRatio: 0.72,
               ),
               itemCount: products.length,
               itemBuilder: (context, index) {
                 return ProductCard(
                   product: products[index],
+                  bookingHistory: bookingHistory,
+                  onBooking: () {
+                    final product = products[index];
+
+                    onBookingAdded(
+                      Booking(
+                        productName: product.name,
+                        price: product.price,
+                        date: DateTime.now(),
+                      ),
+                    );
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          '${product.name} berhasil di-booking!',
+                        ),
+                        backgroundColor: Colors.pink,
+                      ),
+                    );
+                  },
                 );
               },
             ),

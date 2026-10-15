@@ -16,8 +16,7 @@ class MainNavigation extends StatefulWidget {
   });
 
   @override
-  State<MainNavigation> createState() =>
-      _MainNavigationState();
+  State<MainNavigation> createState() => _MainNavigationState();
 }
 
 class _MainNavigationState extends State<MainNavigation> {
@@ -25,10 +24,19 @@ class _MainNavigationState extends State<MainNavigation> {
 
   final List<Booking> bookingHistory = [];
 
+  void addBooking(Booking booking) {
+    setState(() {
+      bookingHistory.add(booking);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = [
-      HomePage(),
+      HomePage(
+        bookingHistory: bookingHistory,
+        onBookingAdded: addBooking,
+      ),
       BookingHistoryPage(
         bookingHistory: bookingHistory,
       ),
